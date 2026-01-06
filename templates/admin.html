@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel | Iron Gym</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+        }
+        .navbar { background: rgba(0,0,0,0.9); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff4d4d; }
+        .container { padding: 30px; }
+        .stats-row { display: flex; gap: 20px; margin-bottom: 30px; }
+        .card { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; flex: 1; backdrop-filter: blur(5px); border: 1px solid #444; }
+        .add-form { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin-bottom: 30px; border-left: 5px solid #ff4d4d; }
+        input, select, button { padding: 10px; margin-right: 10px; border-radius: 5px; border: none; }
+        table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #ff4d4d; }
+        tr:hover { background: rgba(255,255,255,0.1); }
+        .logout-btn { color: white; text-decoration: none; background: #555; padding: 8px 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>POWERHOUSE GYM</h2>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+    <div class="container">
+        <div class="stats-row">
+            <div class="card"><h3>Total Members</h3><h2>{{ members|length }}</h2></div>
+            <div class="card"><h3>Active Subscriptions</h3><h2>{{ members|length }}</h2></div>
+            <div class="card"><h3>Revenue</h3><h2>₹ {{ (members|length) * 500 }}</h2></div>
+        </div>
+        <div class="add-form">
+            <h3>Add New Gym Member</h3><br>
+            <form action="/add" method="POST">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="text" name="contact" placeholder="Mobile No.">
+                <select name="plan">
+                    <option value="Basic - 500">Basic Plan</option>
+                    <option value="Pro - 1000">Pro Plan</option>
+                </select>
+                <button type="submit" style="background:#ff4d4d; color:white; cursor:pointer;">REGISTER</button>
+            </form>
+        </div>
+        <table>
+            <tr><th>ID</th><th>Name</th><th>Mobile</th><th>Plan</th><th>Join Date</th></tr>
+            {% for m in members %}
+            <tr><td>#{{ m[0] }}</td><td>{{ m[1] }}</td><td>{{ m[3] }}</td><td>{{ m[4] }}</td><td>{{ m[5] }}</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

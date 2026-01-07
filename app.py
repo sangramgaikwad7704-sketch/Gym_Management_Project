@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 from datetime import date
+import os
 
 app = Flask(__name__)
-app.secret_key = "gym_final_2026"
+app.secret_key = "gym_2026_key"
 DB_NAME = 'gym_database.db'
 
-# डेटाबेस आणि टेबल तयार करणे
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -30,12 +30,10 @@ def login():
     password = request.form.get('password')
     role = request.form.get('role')
     
-    # Admin/Owner Login
     if role == "admin" and username == "admin" and password == "admin123":
         session['user'], session['role'] = "Admin", "admin"
         return redirect(url_for('admin_dashboard'))
     
-    # Member Login
     elif role == "member":
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
@@ -45,8 +43,7 @@ def login():
         if user:
             session['user'], session['role'] = user[1], "member"
             return redirect(url_for('member_dashboard'))
-    
-    return "Invalid Credentials! <a href='/'>Try Again</a>"
+    return "Invalid! <a href='/'>Try Again</a>"
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
@@ -60,12 +57,9 @@ def admin_dashboard():
 
 @app.route('/add', methods=['POST'])
 def add():
-    name = request.form.get('name')
-    pwd = request.form.get('password')
-    contact = request.form.get('contact')
-    plan = request.form.get('plan')
+    name, pwd = request.form.get('name'), request.form.get('password')
+    contact, plan = request.form.get('contact'), request.form.get('plan')
     today = date.today().strftime("%d-%m-%Y")
-    
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO members (name, password, contact, plan, join_date) VALUES (?, ?, ?, ?, ?)", 
@@ -76,7 +70,6 @@ def add():
 
 @app.route('/delete/<int:id>')
 def delete_member(id):
-    if 'user' not in session or session['role'] != "admin": return redirect('/')
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute("DELETE FROM members WHERE id=?", (id,))

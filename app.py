@@ -1,11 +1,15 @@
+import os
 from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 from datetime import date
-import os
 
-app = Flask(__name__)
-app.secret_key = "gym_2026_key"
-DB_NAME = 'gym_database.db'
+base_dir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(__name__, 
+            template_folder=os.path.join(base_dir, 'templates'),
+            static_folder=os.path.join(base_dir, 'static'))
+
+app.secret_key = "gym_ultra_premium_2026"
+DB_NAME = os.path.join(base_dir, 'gym_database.db')
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
@@ -26,14 +30,10 @@ def login_page():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    role = request.form.get('role')
-    
+    username, password, role = request.form.get('username'), request.form.get('password'), request.form.get('role')
     if role == "admin" and username == "admin" and password == "admin123":
         session['user'], session['role'] = "Admin", "admin"
         return redirect(url_for('admin_dashboard'))
-    
     elif role == "member":
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
@@ -41,7 +41,7 @@ def login():
         user = cursor.fetchone()
         conn.close()
         if user:
-            session['user'], session['role'] = user[1], "member"
+            session['user'], session['role'], session['user_id'] = user[1], "member", user[0]
             return redirect(url_for('member_dashboard'))
     return "Invalid! <a href='/'>Try Again</a>"
 
@@ -57,13 +57,11 @@ def admin_dashboard():
 
 @app.route('/add', methods=['POST'])
 def add():
-    name, pwd = request.form.get('name'), request.form.get('password')
-    contact, plan = request.form.get('contact'), request.form.get('plan')
-    today = date.today().strftime("%d-%m-%Y")
+    name, pwd, contact, plan = request.form.get('name'), request.form.get('password'), request.form.get('contact'), request.form.get('plan')
+    today = date.today().strftime("%d-%b-%Y")
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO members (name, password, contact, plan, join_date) VALUES (?, ?, ?, ?, ?)", 
-                   (name, pwd, contact, plan, today))
+    cursor.execute("INSERT INTO members (name, password, contact, plan, join_date) VALUES (?, ?, ?, ?, ?)", (name, pwd, contact, plan, today))
     conn.commit()
     conn.close()
     return redirect(url_for('admin_dashboard'))
@@ -82,7 +80,7 @@ def member_dashboard():
     if 'user' not in session: return redirect('/')
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM members WHERE name=?", (session['user'],))
+    cursor.execute("SELECT * FROM members WHERE id=?", (session['user_id'],))
     m = cursor.fetchone()
     conn.close()
     return render_template('member.html', m=m)

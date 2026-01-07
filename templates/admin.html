@@ -1,34 +1,30 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style> body { display: block; padding: 40px; } .box { width: 100%; text-align: left; margin-bottom: 30px; } </style>
-</head>
+<head><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><title>Admin Panel</title></head>
 <body>
-    <div class="box">
-        <h2>Register New Member</h2>
-        <form action="/add" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" name="name" placeholder="Name" required style="width: 200px;">
-            <input type="password" name="password" placeholder="Password" required style="width: 150px;">
-            <input type="text" name="contact" placeholder="Mobile" style="width: 150px;">
-            <select name="plan" style="width: 150px;">
-                <option>Basic - 500</option>
-                <option>Premium - 1000</option>
-            </select>
-            <button type="submit" style="width: 150px;">ADD MEMBER</button>
-        </form>
+<div class="dashboard-container">
+    <div class="sidebar"><h2>ADMIN<span>PANEL</span></h2><nav><a href="/logout">Logout</a></nav></div>
+    <div class="main-content">
+        <h1>Member Management</h1>
+        <div class="stat-card">
+            <form action="/add" method="POST" style="display:grid; grid-template-columns: repeat(5, 1fr); gap:10px;">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="password" name="password" placeholder="Pass" required>
+                <input type="text" name="contact" placeholder="Mobile" required>
+                <select name="plan"><option>Basic</option><option>Premium</option></select>
+                <button type="submit">ADD MEMBER</button>
+            </form>
+        </div>
+        <table>
+            <tr><th>ID</th><th>Name</th><th>Contact</th><th>Plan</th><th>Joined</th><th>Action</th></tr>
+            {% for member in members %}
+            <tr>
+                <td>#{{ member[0] }}</td><td>{{ member[1] }}</td><td>{{ member[3] }}</td><td>{{ member[4] }}</td><td>{{ member[5] }}</td>
+                <td><a href="/delete/{{ member[0] }}" style="color:red; text-decoration:none;">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    <table>
-        <tr><th>ID</th><th>Name</th><th>Contact</th><th>Plan</th><th>Join Date</th><th>Action</th></tr>
-        {% for m in members %}
-        <tr>
-            <td>{{ m[0] }}</td><td>{{ m[1] }}</td><td>{{ m[3] }}</td><td>{{ m[4] }}</td><td>{{ m[5] }}</td>
-            <td><a href="/delete/{{ m[0] }}" style="color: #ff4d4d; text-decoration: none;">Delete</a></td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br><a href="/logout" style="color: gray;">Logout</a>
+</div>
 </body>
 </html>

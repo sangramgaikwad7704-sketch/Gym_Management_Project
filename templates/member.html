@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Member Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="card">
-        <img src="{{ url_for('static', filename='user.png') }}" class="pic">
-        <h2>{{ m[1] }}</h2>
-        <p><strong>Member ID:</strong> #{{ m[0] }}</p>
-        <p><strong>Plan:</strong> {{ m[4] }}</p>
-        <p><strong>Contact:</strong> {{ m[3] }}</p>
-        <p><strong>Joined:</strong> {{ m[5] }}</p>
-        <br><a href="/logout" style="color: gray; text-decoration: none;">Logout</a>
+<div class="dashboard-container">
+    <div class="sidebar"><h2>POWER<span>GYM</span></h2><nav><a href="#" class="active">Dashboard</a><a href="/logout">Logout</a></nav></div>
+    <div class="main-content">
+        <header><h1>Welcome, <span style="color:#ff4d4d;">{{ m[1] }}!</span></h1></header>
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Member ID</h3><p>#GYM-{{ m[0] }}</p></div>
+            <div class="stat-card"><h3>Active Plan</h3><p>{{ m[4] }}</p></div>
+            <div class="stat-card"><h3>Join Date</h3><p>{{ m[5] }}</p></div>
+        </div>
+        <div class="stat-card" style="border-left: 5px solid #ff4d4d;">
+            <h3 style="color:#ff4d4d; margin-bottom:10px;">Today's Workout: Cardio & Core</h3>
+            <p>1. Running - 15 Mins</p><p>2. Plank - 3 Sets</p><p>3. Crunches - 50 Reps</p>
+        </div>
     </div>
+</div>
 </body>
 </html>

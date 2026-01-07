@@ -1,0 +1,8 @@
+body { background: #121212; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+.box, .card { background: #1e1e1e; padding: 30px; border-radius: 12px; width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+h2 { color: #ff4d4d; }
+input, select, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+button { background: #ff4d4d; color: white; font-weight: bold; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+th { background: #ff4d4d; }
